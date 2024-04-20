@@ -4,7 +4,7 @@
   "description": "",
   "author": "",
   "engines": {
-    "node": ">20"
+    "node": ">=20"
   },
   "private": true,
   "license": "UNLICENSED",
@@ -40,6 +40,7 @@
     "joi": "^17.12.3",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.2",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
