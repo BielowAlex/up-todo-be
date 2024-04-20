@@ -5,18 +5,18 @@
   "version": "2",
   "builds": [
     {
-      "src": "dist/main.js",
+      "src": "public/main.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/main.js"
+      "dest": "public/main.js"
     }
   ],
   "engines": {
-    "node": ">=18"
+    "node": "20.x"
   },
   "private": true,
   "license": "UNLICENSED",
