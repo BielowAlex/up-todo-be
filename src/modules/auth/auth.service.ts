@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -21,15 +22,36 @@ export class AuthService {
     protected readonly configService: ConfigService,
   ) {}
 
-  public async googleLogin(req: Request) {
+  public async googleLogin(req: Request, res: Response) {
     if (!req.user) {
-      return ' No user';
+      throw new ConflictException('Something went wrong');
     }
 
-    return {
-      message: 'User info from google',
-      user: req.user,
-    };
+    const user: any = req.user;
+
+    const currentUser: User =
+      await this.userService.getByEmailWithoutValidation(user.email);
+
+    if (currentUser) {
+      const payload: JwtPayload = { id: currentUser._id };
+      const tokens: JwtTokens = this.generateTokens(payload);
+
+      this.saveTokens(tokens, res);
+
+      return currentUser;
+    }
+
+    const newUser: User = await this.userService.create({
+      ...user,
+      password: null,
+    });
+
+    const payload: JwtPayload = { id: newUser._id };
+    const tokens: JwtTokens = this.generateTokens(payload);
+
+    this.saveTokens(tokens, res);
+
+    return newUser;
   }
 
   public async signIn(createAuthDto: SignInDto, response: Response) {
