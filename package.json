@@ -1,8 +1,20 @@
 {
   "name": "up-todo-be",
-  "version": "0.0.1",
   "description": "",
   "author": "",
+  "version": "2",
+  "builds": [
+    {
+      "src": "dist/main.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/main.js"
+    }
+  ],
   "engines": {
     "node": ">=18"
   },
