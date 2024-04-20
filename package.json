@@ -13,7 +13,7 @@
     "start": "nest start",
     "dev": "nest start --watch --preserveWatchOutput",
     "debug": "nest start --debug --watch",
-    "prod": "node public/main",
+    "prod": "npm run build && node public/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
