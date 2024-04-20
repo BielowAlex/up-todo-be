@@ -80,4 +80,14 @@ export class UserService {
 
     return currentUser;
   }
+
+  async getByEmailWithoutValidation(email) {
+    const currentUser: User = await this.userModel.findOne({ email }).exec();
+
+    if (!currentUser) {
+      return null;
+    }
+
+    return currentUser;
+  }
 }
