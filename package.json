@@ -2,19 +2,6 @@
   "name": "up-todo-be",
   "description": "",
   "author": "",
-  "version": "2",
-  "builds": [
-    {
-      "src": "public/main.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "public/main.js"
-    }
-  ],
   "engines": {
     "node": "20.x"
   },
