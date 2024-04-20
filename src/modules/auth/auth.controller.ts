@@ -1,7 +1,6 @@
 import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
-import { JwtService } from '@nestjs/jwt';
 
 import { Request, Response } from 'express';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -12,10 +11,7 @@ import { JwtGuard } from './guards/jwt.guard';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    protected readonly authService: AuthService,
-    protected readonly jwtService: JwtService,
-  ) {}
+  constructor(protected readonly authService: AuthService) {}
 
   @Post('sign-in')
   @ApiOperation({ summary: 'sign-in' })

@@ -30,6 +30,7 @@ export class UserService {
     return await new this.userModel({
       ...createUserDto,
       password: await hash(createUserDto.password, 10),
+      avatar: createUserDto.avatar ? createUserDto.avatar : null,
     }).save();
   }
 
@@ -74,7 +75,7 @@ export class UserService {
     const currentUser: User = await this.userModel.findOne({ email }).exec();
 
     if (!currentUser) {
-      throw new NotFoundException(`User with Email ${email} not found`);
+      throw new NotFoundException(`User not found`);
     }
 
     return currentUser;
