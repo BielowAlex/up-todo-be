@@ -24,7 +24,9 @@ export class AuthController {
 
   @Get()
   @UseGuards(AuthGuard('google'))
-  public async googleAuth(@Req() req: Request) {}
+  public async googleAuth(@Req() req: Request) {
+    console.log(req);
+  }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
