@@ -21,6 +21,17 @@ export class AuthService {
     protected readonly configService: ConfigService,
   ) {}
 
+  public async googleLogin(req: Request) {
+    if (!req.user) {
+      return ' No user';
+    }
+
+    return {
+      message: 'User info from google',
+      user: req.user,
+    };
+  }
+
   public async signIn(createAuthDto: SignInDto, response: Response) {
     const currentUser: User = await this.userService.getByEmail(
       createAuthDto.email,
