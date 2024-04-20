@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
   Post,
@@ -16,22 +17,33 @@ import { User } from '../user/schemas/user.schema';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from './guards/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(protected readonly authService: AuthService) {}
+  constructor(
+    protected readonly authService: AuthService,
+    protected readonly configService: ConfigService,
+  ) {}
 
-  @Get()
+  @Get('google')
   @UseGuards(AuthGuard('google'))
-  public async googleAuth(@Req() req: Request) {
-    console.log(req);
-  }
+  public async googleAuth() {}
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  public async googleAuthCallback(@Req() req: Request) {
-    return this.authService.googleLogin(req);
+  public async googleAuthCallback(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const user: User = await this.authService.googleLogin(req, res);
+
+    if (user) {
+      return res.redirect(this.configService.get('APP_WHITE_URL'));
+    }
+
+    throw new ConflictException('Something went wrong =(');
   }
   @Post('sign-in')
   @ApiOperation({ summary: 'sign-in' })
