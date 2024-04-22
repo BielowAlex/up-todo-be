@@ -3,3 +3,8 @@ export enum TaskStatusEnum {
   Completed = 'COMPLETED',
   Archived = 'ARCHIVED',
 }
+
+export type ProgressResponse = {
+  completedTask: number;
+  total: number;
+};

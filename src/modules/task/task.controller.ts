@@ -18,6 +18,8 @@ import { ExtractUserId } from '../../shared/decorators/extract-user-id.decorator
 import { TaskPaginationDto } from './dto/task-pagination.dto';
 import { TaskFilterDto } from './dto/task-filter.dto';
 import { Task } from './schemas/task.schema';
+import { ProgressResponse } from './task.types';
+import { DateQueryDto } from './dto/date-query.dto';
 
 @ApiTags('Task')
 @Controller('task')
@@ -50,9 +52,13 @@ export class TaskController {
   ) {
     return await this.taskService.getAllByStatus(filterQuery, userId);
   }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskService.findOne(+id);
+  @Get('/progress')
+  @UseGuards(JwtGuard)
+  public async getProgressByDate(
+    @Query() { date }: DateQueryDto,
+    @ExtractUserId() userId: string,
+  ): Promise<ProgressResponse> {
+    return await this.taskService.getProgressByDate(date, userId);
   }
 
   @Patch('/:id')

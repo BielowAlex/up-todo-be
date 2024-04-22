@@ -6,7 +6,7 @@ import { Task } from './schemas/task.schema';
 import { Model } from 'mongoose';
 import { UserService } from '../user/user.service';
 import { TaskPaginationDto } from './dto/task-pagination.dto';
-import { TaskStatusEnum } from './task.types';
+import { ProgressResponse, TaskStatusEnum } from './task.types';
 import { TaskFilterDto } from './dto/task-filter.dto';
 
 @Injectable()
@@ -66,11 +66,38 @@ export class TaskService {
     { status = TaskStatusEnum.InProgress, date }: TaskFilterDto,
     userId: string,
   ): Promise<Task[]> {
-    return await this.taskModel.find({ status, user: userId, date }).exec();
+    const filter =
+      status === TaskStatusEnum.Archived
+        ? { status, user: userId }
+        : { status, user: userId, date };
+
+    return await this.taskModel.find(filter).exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  public async getProgressByDate(
+    date: string,
+    userId: string,
+  ): Promise<ProgressResponse> {
+    const completedTask: number = await this.taskModel
+      .countDocuments({
+        date,
+        user: userId,
+        status: TaskStatusEnum.Completed,
+      })
+      .exec();
+
+    const inProgressTask: number = await this.taskModel
+      .countDocuments({
+        date,
+        user: userId,
+        status: TaskStatusEnum.InProgress,
+      })
+      .exec();
+
+    return {
+      completedTask,
+      total: completedTask + inProgressTask,
+    };
   }
 
   public async update(
