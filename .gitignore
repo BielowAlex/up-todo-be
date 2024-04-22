@@ -1,5 +1,5 @@
 # compiled output
-./public
+/public
 /dist
 /node_modules
 /build
@@ -218,3 +218,13 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 /public/shared/constants/validation.d.ts
 /public/shared/constants/validation.js
 /public/shared/constants/validation.js.map
+/public/modules/task/task.types.d.ts
+/public/modules/task/task.types.js
+/public/modules/task/task.types.js.map
+/src/modules/task/task.types.ts
+/public/modules/task/dto/task-filter.dto.d.ts
+/public/modules/task/dto/task-filter.dto.js
+/public/modules/task/dto/task-filter.dto.js.map
+/public/modules/task/dto/task-pagination.dto.d.ts
+/public/modules/task/dto/task-pagination.dto.js
+/public/modules/task/dto/task-pagination.dto.js.map
