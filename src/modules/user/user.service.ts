@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -8,7 +9,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -44,9 +46,16 @@ export class UserService {
     return currentUser;
   }
 
-  public async update(id: string, updateUserDto: UpdateUserDto) {
+  public async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const updateInfo: UpdateUserDto = {
+      ...updateUserDto,
+      password: updateUserDto.password
+        ? await hash(updateUserDto.password, 10)
+        : null,
+    };
+
     const updatedUser: User = await this.userModel
-      .findByIdAndUpdate(id, updateUserDto, {
+      .findByIdAndUpdate(id, updateInfo, {
         new: true,
       })
       .exec();
@@ -81,7 +90,7 @@ export class UserService {
     return currentUser;
   }
 
-  public async getByEmailWithoutValidation(email) {
+  public async getByEmailWithoutValidation(email: string): Promise<User> {
     const currentUser: User = await this.userModel.findOne({ email }).exec();
 
     if (!currentUser) {
@@ -89,5 +98,31 @@ export class UserService {
     }
 
     return currentUser;
+  }
+
+  public async updatePassword(
+    { currentPassword, newPassword }: UpdatePasswordDto,
+    userId: string,
+  ): Promise<User> {
+    const currentUser: User = await this.getById(userId);
+
+    const isPasswordValid: boolean = await compare(
+      currentPassword,
+      currentUser.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new BadRequestException('Incorrect Credentials');
+    }
+
+    const updatedPassword = {
+      password: await hash(newPassword, 10),
+    };
+
+    return await this.userModel
+      .findByIdAndUpdate(userId, updatedPassword, {
+        new: true,
+      })
+      .exec();
   }
 }

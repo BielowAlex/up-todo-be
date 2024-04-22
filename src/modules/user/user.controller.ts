@@ -21,6 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guards/jwt.guard';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -34,6 +35,18 @@ export class UserController {
   @ApiBody({ type: CreateUserDto })
   public async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return await this.userService.create(createUserDto);
+  }
+
+  @Patch('password')
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'create a new user' })
+  @ApiBody({ type: CreateUserDto })
+  public async updatePassword(
+    @Body() passwordInfo: UpdatePasswordDto,
+    @ExtractUserId() userId: string,
+  ): Promise<User> {
+    return await this.userService.updatePassword(passwordInfo, userId);
   }
 
   @Get('one/:id')
