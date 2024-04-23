@@ -31,8 +31,9 @@ export class UserService {
 
     return await new this.userModel({
       ...createUserDto,
-      password:
-        createUserDto.password && (await hash(createUserDto.password, 10)),
+      password: createUserDto.password
+        ? await hash(createUserDto.password, 10)
+        : null,
       avatar: createUserDto.avatar ? createUserDto.avatar : null,
     }).save();
   }
