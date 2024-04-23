@@ -132,10 +132,12 @@ export class AuthService {
     response.cookie(JwtNames.ACCESS_TOKEN, tokens.access_token, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
     });
     response.cookie(JwtNames.REFRESH_TOKEN, tokens.refresh_token, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
     });
   }
 
